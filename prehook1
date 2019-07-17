@@ -1,0 +1,19 @@
+#!/bin/sh
+# git pre-commit to search for console.log string
+
+
+files=`git diff --name-only --cached`
+
+is_error=false
+
+for file in $files; do
+  if grep -q console.log "$file"; then
+    echo "Found in: $file"
+  fi
+done
+
+if  [ $is_error ]; then
+    exit 1;
+fi
+
+exit 0
