@@ -1,19 +1,24 @@
 #!/bin/sh
 # git pre-commit to search for console.log string
 
+declare -a violations=("console.log" "dd" "var_dump")
+
 
 files=`git diff --name-only --cached`
 
 is_error=false
 
 for file in $files; do
-  if grep -q console.log "$file"; then
-    echo "Found in: $file"
-  fi
+  for i in "${violations[@]}"
+    do
+      if grep -q $i "$file"; then
+        echo "Violation "$i" Found in: $file"
+        is_error=true
+      fi
+    done
 done
 
-if  [ $is_error ]; then
+if  [ "$is_error" = true ]; then
     exit 1;
 fi
-
-exit 0
+exit 0;
